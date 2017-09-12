@@ -1,0 +1,93 @@
+git基础入门学习
+
+git clone [url]    从网上克隆下来到本地
+
+
+设置贡献者
+git config --global user.name     设置贡献者姓名
+git config --global user.email    设置贡献者邮件
+git config --list      查看所有配置项
+
+
+git status                    查看项目  工作  区的情况
+git add filename              添加到修改过的文件到  暂存区 （指定文件名）,Changes to be committed
+git add .                     添加所有修改过的文件到   暂存区 
+git commit                    提交到  版本库  此时会弹出一个窗口需要填写注释说明
+git commit -m "注释说明"       提交到  版本库  并直接在命令行窗口写注释
+git commit -a -m "注释说明"    一条命令 先执行 文件 添加 到 暂存区 再 提交到 版本库
+
+git log        查看提交的历史  按回车 来显示后面的版本情况  按 q 键 退出查看提交历史
+               查看提交id (commit_id)
+
+对比，比较三个区的不同
+git diff                       工作区  与 暂存区  的差异对比
+git diff --cached(--staged)    暂存区  与 版本区  的差异对比
+git diff master                工作区  与 版本区  的差异对比
+
+撤销
+git reset HEAD (filename)        从暂存区 撤销回 工作区  (HEAD 小写也可以)
+git checkout -- (filename)       把工作区 撤销回 版本区的状态(--与文件名之间要加空格)
+git commit -m "注释说明" --amend   在暂存区中 把上一次提交（版本区）撤销回来  再把暂存区的一起重新提交到版本区
+                                （为一次提交而不是两次提交）
+
+删除
+                     工作区中的文件 可以随意 删除
+git rm filename      删除 暂存区  名为filename的文件 (如果工作区没先删除filename，则此指令无法起做用)     
+git rm -f filename   工作区filename存在，此指令，同时删除在工作区和暂存区中的filename文件 （-f 表示强制删除的意思） 
+git rm --cached filename   工作区的filename文件不删除  暂存区的filename文件 被删除了 
+
+恢复
+git checkout commit_id filename  查看提交记录，随便复制一段或全部commit_id 恢复指定文件 
+git reset --hard commit_id       恢复到 commit_id所指的版本（是对版本的恢复还原）  
+git reset --hard HEAD^           恢复到上一个版本（HEAD相当于指针，^表示上一个版本）
+git reset --hard HEAD~num        恢复到前面 num 个版本 （num用数字）
+git reflog                       查看 每一次操作行为的信息 行首有id (commit_id)
+
+
+同步到远程仓库
+git remote                获取远程仓库的名字 （origin自带的远程仓库的名字）
+git remote -v             查看远程仓库对应的地址
+git remote add            可以改远程仓库的名字
+git push origin master    把本地的版本（master版本） 推送到 远程 仓库（origin仓库名）
+
+github 上添加协作者，需要把邀请连接发给协作者
+
+获得到远程仓库的最新版本
+git fetch           从远程仓库拉取过来，不自动（不直接）合到当前的版本分支上去（推介使用），然后，进行查看是否有冲突
+       如果有冲突，需要进行冲突处理
+       git diff master origin/master  分析本地 与 远程仓库 上版本的区别
+       git merge orgin/master         在代码编辑器上进行手动合并，删除，解决冲突 
+
+git pull            从远程仓库拉取过来自动合并到当前的版本分支上去
+
+
+开源项目协作 （可以在github上直接操作修改）
+可以在 github 上 fork 一个项目   （在本地开发，上传到自己的远程仓库）
+可以在 github 上 pull request 把自己修改的版本 合并到 开源项目上去
+
+开源项目的有权限的人，可以在 Pull requests 查看请求的合并  
+如果没有总是，就可以在页面 merge pull request  合并
+
+
+分支   （一个分支，随着开发有不同的版本，版本名也有多个,不同的版本名指向同一个版本，
+        合并分支，就是把不同的分支指向同一个版本）
+git branch                  可以查看当前所在的 分支  (* master  表示当前所在的分支是master)
+git branch NewBranchName    创建   名为NewBranchName 的分支 
+git checkout BranchName     切换到  名为NewBranchName 的分支 
+git merge BranchName        把 名为BranchName分支 合并到 master 
+                            (可理解为master的指针，也指到BranchName上的版本,在master分支下进行合并)   
+
+git branch --merged         查看 已经  合并的 分支
+git branch --no-merged      查看 没有  合并的 分支
+
+已经合并的分支，没什么作用可以删除掉
+git branch -d BranchName     删除BranchName分支  (没合并到master的分支，不能用这个命令删除)
+git branch -D BranchName     可以强制删除BranchName,没合并过也可以删除。
+
+有冲突的合并  如有冲突
+git merge BranchName      合并分支，如有冲突，再按下面解决
+git status                 可以把有冲突的代码 在编辑器 上显示出来 需要 人为的改好
+git commit -a -m "注释"     改好冲突后，再提交到版本库  这样就处理好了
+
+
+
