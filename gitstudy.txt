@@ -49,7 +49,7 @@ git remote                获取远程仓库的名字 （origin自带的远程�
 git remote -v             查看远程仓库对应的地址
 git remote add            可以改远程仓库的名字
 git push origin master    把本地的版本（master版本） 推送到 远程 仓库（origin仓库名）
-
+                          如果要提交分支，就把master 换为分支名称
 github 上添加协作者，需要把邀请连接发给协作者
 
 获得到远程仓库的最新版本
@@ -88,6 +88,27 @@ git branch -D BranchName     可以强制删除BranchName,没合并过也可以�
 git merge BranchName      合并分支，如有冲突，再按下面解决
 git status                 可以把有冲突的代码 在编辑器 上显示出来 需要 人为的改好
 git commit -a -m "注释"     改好冲突后，再提交到版本库  这样就处理好了
+
+github 网站上的分支操作
+命令创建 分支
+git push origin new1    把本地的new1 分支提交到 远程 仓库名为origin 上     
+在github 网上 可以在 分支选择上 的输框  输入新的名字  就可以进行分支的创建
+在github 网上 branches 里，可以以删除分支
+
+github 上的标签 
+命令方式  git tag                   查看标签
+         git tag  str              str为你想要打的标签的字符串 如：v1.0.0
+        git push origin  str       提交到远程仓库，可以用str(标签 来 代指 分支)
+github 可以在 releases  上直接 打标签
+
+fork      可以把一个开源的项目 镜象复制到自己的github里
+star      点赞
+watch     关注
+
+github 上创建组织
+在网上 New organization 可以创建组织
+
+
 
 
 
