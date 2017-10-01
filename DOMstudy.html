@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>DOMstudy</title>
+</head>
+<body>
+    <script>
+    javaScritp由三部分组成
+    ECMAscript(javaScript核心标准，也是一个解析器)；
+    DOM(通过document提供的一些方法或者属性来操作页面)
+    BOM(通过window提供的一些方法或者属性来操作浏览器)
+        /*  DOM： Document object Model (文档对象模型)
+            DOM通过document提供的一些能够操作页面内容属性或者方法，赋予开发者操作页面的能力
+            接口==API
+            简单的来说：
+             document提供了一些API(接口)，赋予开发者操作页面的能力
+
+            例： var div=document.getElementById('div1');   通过ducument 提供的getElementById('')的接口获取标签
+                div.style.cssText='width:100px;height:100px;';
+
+            DOM结构树
+                一般分为三大关系
+                    父子关系：只有一层上下级关系 从当前往上找
+                    子级关系：只有一层以下的关系
+                    兄弟关系：同一级的
+
+                    父子节点：上下两层节点之间的关系
+                    祖先节点：当前节点上面的所有节点的统称
+                    子孙节点：当前节点下面的所有节点的统称
+                
+                节点的类型分为12种，常用的5个
+                    nodeType:  （xx.nodeType）返回一个数字
+                    元素节点：就是标签，数字1 
+                    document:数字9
+                    文本节点：数字3   （像看见的回车....也是一个文本节点）
+                    注释节点：数字8
+                    属性节点：数字2
+
+                childNodes:(类数组)  xx.childNodes
+                    获取某个节点下的所有子节点，
+
+                    children:不是标准的属性，但是所有的浏览器都支持
+                            是找到某个元素下的所有元素节点。
+
+                nodeValue: 查看节点的值
+                    元素节点的 nodeValue 是 undefined 或 null
+                    文本节点的 nodeValue 是文本本身
+                    属性节点的 nodeValue 是属性值
+                nodeName:查看节点的名
+                    nodeName 是只读的
+                    元素节点的 nodeName 与标签名相同
+                    属性节点的 nodeName 与属性名相同
+                    文本节点的 nodeName 始终是 #text
+                    文档节点的 nodeName 始终是 #document
+                
+                parentNode:查找某个元素的父节点
+                    xxx.parentNode   xxx的父节点
+                    xxx.parentNode.parentNode    xxx父节点的父节点
+
+                nextElementSibling   找到某个元素的下个兄弟节点  xxx.nextElementSibling
+
+                previousElementSibling 找到某个元素上个兄弟节点  xxx.previousElementSibling    
+
+                firstElementChild 第一个元素子节点  xxx.firstElementChild
+
+                lastElementChild  最后一个元素子节点  xxx.lastElementChild
+
+        node.offsetParent   一定要正常使用，自身先要有定位
+            offsetParent就是最近有定位属性的祖先节点       （祖先节点没有定位，默认指向body）
+                 自身有定有
+
+        offsetLeft   :左边外边框 到有定位父级的 左边内边框 的距离
+        offsetTop    :上外边框 到有 定位父级的 上内边框的距离
+                getBoundingClientRect()：获取某个元素的信息  是个对象   .属性 来获得
+                      高版本：left top  bottom right width height
+                      注意：获取的值是会根据滚动条变化的
+
+                小方法：xxx.getBoundingClientRect().Left     是个数据，要加'px'
+                       xxx.getBoundingClientRect().top
+
+                       这个在ie低版本有点不兼容，但left top 这两个值没有问题
+
+        元素属性操作              （以前是用    xxx.属性  可以获取属性）
+            获取元素行间的属性    可以操作行间的自定义的属性   可以获取 src href 等的相对地址
+                xxx.getAttribute(属性)   可以获取到自定义的属性
+                
+                xxx.setAttribute(属性，属性值)  设置属性元素的行间属性
+
+                xxx.removeAttribute(属性)     删除元素的行间属性  
+
+        元素宽高的获取
+            xxx.clientWidth/xxx.clientHeight   获以某个元素的宽高 width+padding  （不计算边框）(溢出的不算）
+            xxx.offsetWidth/xxx.offsetHeight  width+padding+border (计算边框)   
+                            以上两个都不计算margin
+        可视区的宽高
+            document.documentElement.clientWidth
+            document.documentElement.clientHeight
+
+        创建元素
+           var xxx=document.createElement(元素名)      创建元素   
+               xxx.innerHTML="....."                  
+
+            parentNode.appendChild(childNode)    向父级 里面的 的末尾 添加一个元素   
+
+            parentNode.insertBefore(新元素，childnode)  把 新元素 插到 父级 里的某个子级 的前面
+                        如果 子级不存在（为false） inserBefore 会将新元素 添加 到父级里 末尾
+
+        删除节点
+            parentNode.removeChild(xxx)     把xxx 删除掉   
+            (想删除的节点如果不存在，会报错，可以先判断是否存在，然后再删除)
+
+            
+        替换节点：
+            parentNode.replaceChild(要替换成什么，谁被替换)
+
+        克隆节点：
+
+         var  cxx=xxx.cloneNode()     克隆了xxx    默认只克隆元素本身，不会克隆该元素下的所有子节点
+              cxx=xxx.cloneNode(true)     克隆该元素，并且克隆该元素下的所有子节点
+
+             以上两种克隆方法 事件是不会被克隆的。   
+
+
+        注意：appendChild/insertBefore/repalceChild 在操作一个已有的元素时，
+             都是将已有的元素移动，而不是复制一份进行操作 
+
+    表格：
+        可以选 获取一个表格 xxx
+        xxx.tHead     获取 表格头部
+        xxx.tFoot     获取 表格底部
+        xxx.tBodies   获取 表格主体  是一个集合
+
+        xxx.rows      获取tr 获取行  是一个集合  
+
+        rows[].ceils[]   获取某行 某个 单元格  
+
+
+        */
+             
+    </script>
+</body>
+</html>

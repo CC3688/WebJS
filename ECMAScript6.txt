@@ -1,0 +1,40 @@
+ECMAScript6 学习
+
+1 let和const
+    let 用来声明一个变量，和var非常类似
+        let声明的变量，只在其所在的代码块内有效({}花括号的范围为代码块)
+            {
+                let a=1;
+                var b=2;
+                console.log(a)    //在代码块内，a可以被正常访问。a=1。
+            }
+                console.log(a);   //会报错，没有定义a,即在代码块外面(无效)，拿不到a。
+                console.log(b);   //b可以正常被访问到。
+
+        let 声明的变量在预解析的时候，不会被提升。
+            console.log(a);    //es5中，值是underfile  ，值被提升了
+            var a=1;
+
+            console.log(b);     //ES6 会报错，b未被定义
+            let b=2；
+
+            typeof c;        //ES6 会报错，c未被定义
+            let c=10
+
+            lef f=10;
+            function fn()
+            {
+                f=7;     //暂时性死区
+                let f=2;
+            }
+            fn()     //会报错         
+
+        let 不能在同一个作用域下声明已经存在的变量
+            
+            var a=1;
+            let a;     //报错  会告诉你已经定义过了
+
+            let b=1;
+            let b=2；  //报错  会告诉你已经定义过了
+
+    const 用来声明一个常量，常量就是不可以变化的量。

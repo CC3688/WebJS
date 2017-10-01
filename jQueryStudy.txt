@@ -1,0 +1,450 @@
+1 jQuery 入门
+    jq选择元素的风格是跟css风格特别类似    
+    $()    选择元素
+    css()  设置样式     带一个参数是获得该参数样式的值，带两个，设置该参数的样式               
+        $('#div1').css('background','red');   选择 id 元素
+        $('.div1').css('background','red');   选择 class类 元素
+        $('div').css('background','red');     选择 标签 元素
+                如果想同修个多样式可以用{'key1':'val1','key2':'val2'} 样式是key 值是val 都包引号
+        可以省略 原生的循环操作
+        $==jQuery    有冲突的时候使用
+
+        jQuery方法函数化
+            原生： var oDiv=document.getElementById('div1');
+                  oDiv.onclick=function(){
+                      alert(oDiv.innerHTML);
+                  }
+            jQuery写法
+                  var oDiv=$('#div');
+                  oDiv.click(function(){
+                      alert(oDiv.html());
+                  });    
+        click()    点击事件
+        html()     内容
+        js与jq   之间不能混写
+                 jq函数中返回 原生 this     
+                 需要用 $(this).jQuery方法()   这样才能使用jquery的方法
+        attr()   属性方法    可以设置，也可以获取，看参数的个数   可以获取 自定义的属性    
+                加class时直attr('class','activi');(原生的就要用className)
+        val()    专门用来或取value 值和设置 value值   。 多元素取值时，取的是第一个元素的值
+        
+        $(function(){                 //类似于 window.onload=function(){}   
+
+        });
+
+        属性选择                        
+        $('input[value]')              选择有value的input
+        $('input[value=123]')          选择有value的值=123的input
+        $('input[value^=123]')         选择有value的值是以123开头的input
+        $('input[value$=123]')         选择有value的值是以123结尾的input
+        $('input[value*=3]')           选择有value的值是包含有3的input
+        但值有空格隔开的时候，就要用引号引起来
+
+        小技巧， 命名的规范   $div $span   jQuery的用$开始， 原生的不用$
+
+        集合的长度，$()获取的都是个集合,获取集合的长度有下面两种方法
+        $().size()  （比较少用）     $().length    (比较多用，后面没有())
+
+        length 是用来判断 元素是否存在   =0 不存在
+
+        可以用eq()  来选择集合中的第几个。 从0开始   (此方法比较常用)
+    
+    class的操作
+        addClass()  
+        removeClass()
+        toggleClass()
+
+    显示隐藏 
+        show()  hide()       （推荐使用此方法来显示隐藏）
+
+        css() 设置dispaly 属性  （行内元素，使用此方法来显示隐藏，会把它变为块元素，
+                                值要根据元素来设置，比较麻烦，而show/hide 比较智能）
+
+    节点的选择
+        prev()       next()        上一个兄弟节点，下一个兄弟节点
+        prevAll()    nextAll()     前面所有的节点，后面所有的节点
+        siblings()                 所有兄弟节点
+        以上方法，都有参数了筛选功能 通过（）传参进去，可以写id class 标签 和元素选择一样
+
+2 jQuery 上手
+    节点的选择  ()  //$().first()    $().last()  .....
+        子节点：
+        first()       //eq(0)=first()
+        last()
+        slice()      //$().slice(1,3)  截取选择到的集合中的1到3（不包括结束位置）从0开始。如果只写起始位置，就截取到后面全部
+        children()   //参数可以进行过滤  children('div') 这样可以查找到子集下的div的。获取到子节点，不能得到孙节点
+
+        find()       //在已有的集合中去查找 find('li')   集合中的子，孙....(包括所有)节点里去找li
+            
+            尽量避免使用复杂的选择器操作，  建议采用find操作(性能更佳)
+        父节点：
+         parent()     父节点 (获取到的是单个元素集合，不过滤)
+         parents()    获取当前元素的所有祖先节点（获取到的是个集合，可以使用参数进行过滤筛选)
+         closest()    找指定的一个最近的祖先元素（包括自身），必须要接收一个参数（只能选择到一个唯一的元素）
+                      精准的查找能力，实战开发被王，找的是最近的唯一一个元素
+
+        节点的操作
+           创建节点
+              $div=$('<div>')    创建div标签，记得要加尖括号，不然就成了元素选择了。
+              $div.html('hello') 添加文本
+              $div.attr('id','#div1')   添加属性
+             也可以直接在创建标签时写
+             $div=$('<div id="div1">hello</div>')
+
+            添加节点
+               before()    把元素添加到指定节点的前面         指定的元素.before(元素)       元素.insertBefore(指定的元素)
+               after()     把元素添加到指定节点的后面         指定的元素.after(元素)        元素.insertAfter(指定的元素)
+               append()    把元素添加到指定的节点里面的最后。  指定的元素.append(元素)       元素.appendTo(指定的元素)
+               prepend()   把元素添加到指定的节点里面的最前面. 指定的元素.prepend(元素)      元素.prependTo(指定的元素)
+              
+               以上两种写法在于后续操作，如果后续操作是针对指定的元素就用（指定元素.动作(元素))。如果后续操作是针对新创建的元素就用（元素.动作(指定的元素))
+            
+            删除元素
+             想要被删除的元素.remove()      //这样就可以把，想要删的元素 删掉
+
+             元素的操作，默认都是剪切粘贴的操作
+
+             复制的操作  clone()
+                想克隆的元素.clone()      //这样就可以把，想要克隆的元素 克隆 下来，只克隆 结构 不克隆事件等操作行为
+                想克隆的元素.clone(true)   //参数 true 可以把操作行为（事件等)也克隆下来
+
+        jQuery中的索引（*****）
+            index()    （默认第一种）
+                第一种用法，兄弟中的排行。（不论标签类型，看结构在同一父级下的兄弟标签就可以算进去排）    
+                     :索引值，代表的就是当前元素在所有兄弟节点中排第几。从0开始
+                      跟不同类型标签没有关系，只要结构上是兄弟标签就算进去。（要同一个父级下）
+                      index()  不传参数
+                第二种用法，筛选后的排行。
+                     <div><span>span</span></div>
+                     <span>span</span>
+                     <div><span id="span1">span</span></div>
+                     <div><span>span</span></div>
+                     $('#span1').index('span')    //2    常用 这种
+                     $('span').index($('#span1')) //2
+
+        jQuery 遍历 each() （*****）     和原生的for循环相似
+             jQ大部分时候，都是可以省略循环的。
+             each()  接收一个函数，此函数有两个参数(i,elem)（形参可以随便写)
+                    第一个 i 表示 索引值    
+                    第二个elem 操作的元素 返回的是原生的 如果要用jQ的方法，需要$(elem)然后再使用
+                遍历 each() 中 this==elem  this也是原生的。  $(this)==$(elem)
+
+                return false;        //在 遍历 each() 中   当做原生 的 breake 用
+
+        jQuery包装对象  参数要 带尖括号 (<div>)
+            wrap()    (***)   包装       把所选到的集合，每个分别包装
+            wrapAll()   (*)   整体包装    把所选到的集合，都把到参数代表的标签里面。
+                                        如果所选的元素，位置不在一起，jq会把它们弄一起然后包（结构弄乱了）
+            wrapInner() (*)   内部包装   把所选到的集合，每个元里的innerHTML 分别包装 到想要的标签里面
+            unwrap()    (*)   删除包装    相当于删除父节点   （不用传参） body标签不能被删 
+
+        jQ转原生的JS  (*****)
+            get()  :把jQ转成原生的js,默认是一个原生的集合，可以通过参数来找到集合中的指定项后就可以使用原生的js
+            $('选择器').get(0)           即使是$(id).get(0)   也要写上0
+            获取内容的高度
+            元素之间的比较
+
+
+3jQuery 突破
+        元素的尺寸  （*****）
+        width()           height()            //width
+        innerWidth()      innerHeight()       //width+padding
+        outerWidth()      outerHeight()      //width+padding+border
+        outerWidth(true)  outerHeight(true)  //width+padding+border+margin
+
+        传参，可以把设置 对应 的宽高    （各种宽高，设置后，总值）   
+        width(200)            //width=200
+        innerWidth(200)       //width=200-padding(左右)
+        outerWidth(200)       //width=200-padding(左右)-border(左右)
+        outerWidth(200,true)  //width=200-padding(左右)-border(左右)-margin
+
+        原生js是获取不到隐藏元素的尺寸
+        jQ可以获取隐藏元素的尺寸
+
+        $(window).height        //可视区的高
+        $(document).height()    //页面的高
+
+        scrollTop()     (******)    
+                        滚动到最底部时：$(document).scrollTop==$(document).height()-$(window).height()
+        scrollLeft()
+
+        元素距离
+            offset()
+
+            $('id').offset().top      //top left 后不加括号。请注意  offset  是到整个页面的距离，都是相对于整个页面
+            $('id').offset().left     
+
+            即使是有嵌套的元素，里面的元素 的offset 值也是相对于整个页面的距离。不管他的父级，祖先节点是不是有定位。
+            
+            如果 想获取到有定位父级的距离，就要用position().left 或position().top   ，是到
+            但，它不认margin值。布局需要注意。
+
+            不管有没有margin，都想获得元素到定位父级的距离
+            offsetParent()获取有定位 的祖先节点
+            $(目标元素).offset().left - $(目标元素).offsetParent().offset().left
+            用目标元素的offset().left  减去  目标元素的定位父母级 offset().left  就可以得到目标元素，到定位父级的距离
+
+        jQuery事件 （*****）
+            $(元素选择器).原生的事件(function(){
+
+            });        可以这样调用事件，和原生的区别是少了on 这两个字母
+
+            在jQ中的事件操作，都是绑定的形式    在同一个事件对象下，可以绑定多个操作行为，
+
+            也可以这样调用事件  
+            $(元素选择器).on('事件名(没带on)',function(){
+                    如果 这里有$(this).off()   那么这个事件绑定的函数执行一次之后，就被取消掉了
+            });
+
+            以上两种写法，没有区别，写第一种写法时，最终jq会调用第二种还实现第一种写法
+            on功能比较丰富。
+            可以同事写多个事件（多个事件中间用空格 隔开）
+            $(元素选择器).on('click mouseover',function(){
+                    如果 这里有$(this).off()   那么这个事件绑定的函数执行一次之后，就删除了所有事件操作
+                                            如果 想针对 一个事件，就可以off(参数)  把事件名传参进去，
+                                            就只取消，传参的事件操作
+            });
+
+            .off()   用来取消事件绑定
+
+
+            event对象  事件对像   原生的很多都支持
+            $(元素).click(function(ev){
+                ev.pageY     //鼠标的坐标： 相对于整个页面的  pageX
+                ev.clientY   //鼠标的坐标： 相对于可视区的    clientX
+
+                ev.which    //键盘 值
+                ev.ctrlKey  //ctrl键
+                ev.target   //事件源
+                ev.stopPropagation  //阻止 事件冒泡
+            })
+
+            $(document).contextmenu(function(ev){   默认右键菜单事件
+
+
+                ev.preventDefault()      //阻止默认事件，这样右键菜单就不再弹出了
+            })
+
+            return false;   阻止 冒泡  和 默认事件
+
+            多次添加on 的处事方法
+            $('#div1).click(function(){
+                $('#span1').off('click).click(function(){
+
+                })
+            })
+            这种嵌套是不合理的。当div1被点多次是，就等于有了多个span1 ，一点span1,就会被触发多次
+            因为它们都是事件绑定的形式。
+            应该把span1,放在div1外面。这样写了，怎样补救，可以用off() 。先把之前的事件清除掉，再绑上事件。
+
+        jQ事件委托
+            普通写法：
+                $('li').on('click',function(){            click是加到li身上
+                    $(this).css('background','red');
+                });
+            事件委托的写法：性能好，操作的元素少，如果后续，给ul 添加 新的li  ,新的li 还是可以有click 事件操作。
+                        上面的普通写法则没有。因为真正的事件后者是在ul身上。
+                $('ul').delegate('li','click',function(ev){  click是加到ul身上，利用原生的冒泡原理，
+                    $(this).css('background','red');
+
+                    （这里的this 和ul 没什么关系，是指后面的li 点击的li）
+                    ev.delegateTarget 这里指的就是ul  这样可以找到委托人。
+                    不用off()来取消委托。off() 是来针对 on() 绑定的事件
+                    $().undelegate()    专门来取消委托事件的  
+                    $(this).undelegate()这样写是错的，因为this指的是li,而不是ul
+                    $(ev.delegateTarget).undelegate()   这样取消委托才对
+                })
+
+            主动触发  在一个事件操作中，主动去触发，另一个以经写好的事件的发生
+                trigger()
+                    如：$('#input1').click(function(){
+                        var $li=$('<li>'+$('#input2').val()+'</li>');
+                        $('ul').append($li);
+                    });
+                    $('#input2').keydown(function(ev){
+                        if(ev.which==13){
+                            $('#input1').trigger('click');    //这里主动的去触发#input已经绑定好的click事件
+                            另一种写法  $(#input1').click();   两种写法没有什么区别。在原码中，这种写法最后也是调用前一种来实现
+                                                              前者空能更多 
+                        }
+                    })
+
+            事间的命名空间
+                $('div').on('click',function(){
+                    alert(1);
+                });
+                $('div').on('click.abc',function(){      //abc是命名空间，这里还是click事件
+                    alert(2);
+                });
+
+                $('div').trigger('click.abc')           //这样就可以精准的主动触发那个了。
+
+                off() 中的命名空间，可以直接写off('.命名空间')   来取消该命名空间下的事件绑定。trigger就可写全才行。
+
+            工具方法
+               $().css()  $().html() $().click()   //都是针对jQuery对象的
+
+               $.xxx()    $.yyy    $.zzz()         //这就是工具方法。既可以给jQ对象用，也可以给原生js用
+
+               $.type() (*****)  //查看变量的类型，原生的typeof 只能判断基本类型。此工具方法，不同的类型都能判断，能判断对触是数组，json.....
+                                返回具体类弄的名称
+               $.isFunction()    //判断是不是函数，返回true,false；
+               $.isNumeric()     //判断是不是数字，返回true,false；如果是[123]  也会返回true
+               $.isArray()     //判断是不是数组，返回true,false；
+               $.isWindow()    //判断是不是windwo，返回true,false；
+               $.isEmptyObject()    //判断是不是空对象，返回true,false；  空的就返回true
+               $.isPlainObject()    //判断是对象自变量，返回true,false    {}  new isEmptyObject
+
+               $.extend()    (*****)   //对象继承操作   默认是 浅拷贝 （拷一层）
+               $.extend(子，父)  //把父类 的所有 赋 给子     子 继承 父类，可以有多个 父类
+
+               $.extend(true,子，父)       //true 深拷贝   对  父类里是对象嵌套多层对象 的复制   叫深拷贝
+                                            //原生，需要用递归
+
+               $.proxy()    //改变this 指向   的调用一个函数
+
+               $.proxy(函数名，this新指向)()     //这样，改变后，（有的情况）要在后面加() 函数才会调用  这种就直接触发
+               $.proxy(函数名，this新指向，参数1，参数2)    这种适合那种事件调用的，事件发生了才调用函数
+               $.proxy(函数名，this新指向，参数1)(参数2)    这种函数是直接调用了。
+                                                不同的应用场景，不同的参数传递方法
+
+                                平时一般，比较简单的改this指向，可以先用一个亦是This或_this把this存起来
+                                This=this 或_this=this
+
+4jQuery进阶
+        jQ中的运动   的快慢 是由时间来控制的   (就向走完一段固定的路程，需要时间短，速度就要快，时间长速度就是慢)
+        normal :400    fast:200    slow :600
+        show()   hide()   toggle()        参数可以传时间 也可以上面三个单词   默认单位是ms   直接填数字就行 
+         显示      隐藏      显示/隐藏       
+
+        fadeIn()   fadeOut()  fadeToggle()      //有默认的时间是400 normal  
+          淡入        淡出        淡入/淡出
+
+        slideDown()    slideUp()    slideToggle()    //有默认时间是400  
+           向下展开       向上收缩      展开/收缩       
+
+        animate()   (*****)
+            第一个参数：对象{}  去设置样式属性和值(目标点)  
+                        {width：300，height：400} 也可以传入一此运算的{width:'+=100'}  就是每次运动在原来的基础上增加100
+            第二个参数：时间，默认时间是400ms  (写时间不用带单位，默认ms)
+            第三个参数：运动形式   只有两种  swing(默认：缓冲：慢快慢)   linear (匀速的) 使用是这两个单词加引号
+            第四个参数：运动结束的回调
+
+            另一种写法
+                animate({},{})   第一个{}写上面第一个参数，第二个{}写上面后面三个参数
+                            第二个{}可以这样写
+                            {
+                                duration:1000,
+                                easing:'linear',
+                                complete:function(){}，     //第一种写法的后三个参数
+                                step：function(a，b){           //此外还可以写这个
+                                    console(a)            //可以检测我们定时器的每一次变化
+                                    b 对象 Tween       b.pos 运动过程当中的比例值，从0到1，       
+                                }                               
+                            }
+            队列的概念：         运动是用定时器 定时器是异步的 不会影响后续代码
+                $('#div1').animate({width:300},1000); 
+                $('#div1').animate({height:300},1000); 
+                $('#div1').animate({left:300},1000);    
+                但实际上，以上三个运动不会同时运动，而是一个一个来
+                  jQ运动 会把这些运动都放到一个[运动1，运动2，....]   形成一个队列
+                  运动就按这样子，一个接一个
+                所以，可以进行链式动作
+                $('#div1').animate({width:300},1000).animate({height:300},1000).animate({left:300},1000)
+
+                如果不想一个接一个的运动下去，中间想停一下，再运动，可以用delay()  参数直接用数字，单位默认是ms
+                $('#div1').animate({width:300},1000).delay(1000).animate({height:300},1000)
+ 
+            运动停止的方法
+                stop() (*****)
+                $('div')在运动    可以用$('div').stop()    默认只会停止当前的运动，后续的链式运动还会继教
+                                可以用$('div').stop(true)  第一个参数，可以停止所有的动动，后面的链式运动也不运动了
+                                可以用$('div').stop(true，true)  第二个参数，可以停止到指定的目标点（当前运动的），后续的运动不运动，也不变到目标点                          
+                                                                就是可以停止所有的运动，然后，把目前的运动直接到达目标点（就当前的到达，后续的不理采）
+                finish()        $('div').finish()     所有的运动都到达目标点（即全停，到目标点）
+
+
+            stop() 有清空运动队列的行为
+                $('#div1').mouseover(function(){
+                    $(this).stop().animate({width:300,height:200});
+                }).mouseout(function(){
+                    $(this).stop().animate({width:100,height:100});
+                })
+                如果 没有stop()  而不断的去mouseover and mouseout,那么此时运动队列，就
+                会有很多运动等着执行，鼠标停止，了运动还在继续
+                  加上stop() 就可以在加上运动前，先清空一下队列，就不会出现上面的情况
+ 
+        jQuery工具方法
+            $.parseJSON() (*****)  :把JSON类型的字符串，转换成真正的JSON数据
+                var a='{"name":"hello","age":"20"}'    字符串  此时不能用a.name 因为它还是个字符串，不是对象
+                var b=$.pasreJSON(a)      解析之后，就能b.name 
+                    只能 针对JSON类型的字符串，安全性比较好，要求是严格的JSON  即，key val 值都要加引号
+
+            $.parseHTML()    :转化HTM的形式的字符串，转成DOM节点，放到一个数组中  （一般在原码中用）
+              var a='<div>div</div><span>span</span>';
+              var b=$.parseHTML(a);   转成一个数组，
+
+            $.parseXML()   
+                var a='......<hello>hello</hello>......';
+                var xmlDoc=$.parseXML(a);
+
+                 $(xmlDoc).find('hello').html()    xml格式自行遵守，这样就可以调用到xml下的数据
+
+            $.isXMLDoc()    判断是不是xml               
+
+    $.ajax()
+        $.ajax({
+            url:  地址   ,  
+            type:'post/get',          默认是get,不写就是get，可以不写
+            data:  {key:val}      ,        传值给后台 val，也可以写成拼接的字符串格式
+            success:function(data){
+              var $var= $.parseJSON(data)
+              这样才能用数据
+            },                            回调函数，第一个参数data，是后台返回来的结果
+                                              然后再做进一步的操作。
+                                        后端，一般会以字符串JSON  传过来，需要先用$.parseJSON() 
+
+
+                                    以上是基本步骤
+
+            error:function(err){}         当请求失败了，就走这里，比喻，请求的地址出错....
+                                           err请求错误的信息，err.status 404 请求的页面没找到
+                                           err.status 500以上  服务器错误 
+
+            dataType:'json/xml',           如果,设置了，就后台需要返回果json数据，系统就会自动解析$.parseJSON() 
+                                       在success(){}中不需要解析，可以直接用了。
+                                       如果 后台 没按要求返回相应的格式数据，就不会成功，会走errror
+
+            async:true,                默认是true, 默认ajax是异步操作，不会影响到后续代码.不定写也可以。
+                                       false  同步操作，要执行完，后续代才会执行
+                                        
+
+
+        });
+     
+        $.ajax()的两个简写 （*****）
+          
+            $.get(url后台地址,{data传入后台的数据，key:val}，function(){},dataType'json/xml').error(){失败走这里};
+                    注意各个参数，.error() 可以不写的。
+            $.post()  参数和上面一样。
+
+            以上两个没有async  想用async 需要用$.ajax
+
+14
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
