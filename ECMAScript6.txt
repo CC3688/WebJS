@@ -1,40 +1,98 @@
 ECMAScript6 学习
 
-1 let和const
-    let 用来声明一个变量，和var非常类似
-        let声明的变量，只在其所在的代码块内有效({}花括号的范围为代码块)
-            {
-                let a=1;
-                var b=2;
-                console.log(a)    //在代码块内，a可以被正常访问。a=1。
-            }
-                console.log(a);   //会报错，没有定义a,即在代码块外面(无效)，拿不到a。
-                console.log(b);   //b可以正常被访问到。
+1.ECMAScript6简介
+    下一代JavaScript语言
 
-        let 声明的变量在预解析的时候，不会被提升。
-            console.log(a);    //es5中，值是underfile  ，值被提升了
-            var a=1;
+    node 服务器环境，对es6的支持度比较高
 
-            console.log(b);     //ES6 会报错，b未被定义
-            let b=2；
+    $node --v8-options | grep harmony  //查看node已经实现的es6特性
 
-            typeof c;        //ES6 会报错，c未被定义
-            let c=10
+    可以用阮一峰先生 的es-checker 工具 来查看正在使用的node 环境 对es6的支持程度
+    $ npm install -g es-checker     //安装工具
+    $ es-checker                    //运行工具
 
-            lef f=10;
-            function fn()
-            {
-                f=7;     //暂时性死区
-                let f=2;
-            }
-            fn()     //会报错         
 
-        let 不能在同一个作用域下声明已经存在的变量
-            
-            var a=1;
-            let a;     //报错  会告诉你已经定义过了
+    Babel转码器
+        可以将es6 代码转为es5 代码 ，可以用es6代码编程，而不用担心环境的支持与否
+        1,首先需要要项目 根目录下有 配置文件 .babelrc   里面代码如下：
+                {
+                "presets": [
+                "latest",
+                "react",
+                "stage-2"
+                ],
+                "plugins": []
+                }
+        2，presets字段设定转码规则，官方提供以下的规则集，你可以根据需要安装
+            # 最新转码规则
+            $ npm install --save-dev babel-preset-latest
 
-            let b=1;
-            let b=2；  //报错  会告诉你已经定义过了
+            # react 转码规则
+            $ npm install --save-dev babel-preset-react
 
-    const 用来声明一个常量，常量就是不可以变化的量。
+            # 不同阶段语法提案的转码规则（共有4个阶段），选装一个
+            $ npm install --save-dev babel-preset-stage-0
+            $ npm install --save-dev babel-preset-stage-1
+            $ npm install --save-dev babel-preset-stage-2
+            $ npm install --save-dev babel-preset-stage-3
+            然后你安装了什么，1中的配置文件就写什么
+        3，Babel提供babel-cli工具，用于命令行转码
+            $ npm install --global babel-cli
+            基本用法：
+                # 转码结果输出到标准输出
+                $ babel example.js
+
+                # 转码结果写入一个文件
+                # --out-file 或 -o 参数指定输出文件
+                $ babel example.js --out-file compiled.js
+                # 或者
+                $ babel example.js -o compiled.js
+
+                # 整个目录转码
+                # --out-dir 或 -d 参数指定输出目录
+                $ babel src --out-dir lib
+                # 或者
+                $ babel src -d lib
+
+                # -s 参数生成source map文件
+                $ babel src -d lib -s
+        3这个是全局安装的。如果要针对项目安装   一个解决办法是将babel-cli安装在项目之中
+                $ npm install --save-dev babel-cli
+                然后改写项目的package.json
+                {
+                // ...
+                "devDependencies": {
+                    "babel-cli": "^6.0.0"
+                },
+                "scripts": {
+                    "build": "babel src -d lib"
+                },
+                }
+            转码的时候，就执行下面的命令。
+                $ npm run build
+
+2.let和const命令
+    let 用来声明一个变量，所声明的变量，只在let命令所在的代码块内有效
+
+        不存在变量提升(预解析)，即let所声明的变量一定要在声明后使用，否则报错。
+
+        会在所在的区域代码块内形成封闭作用域，使用因let 命令声明变量之前，该变量不可以用 称 暂时性死区 
+        即使外面的作用域有 声明些变量，也不能在内部用，因为内部有也有声明，内部形成死区了，内部没声明就可以用。
+
+        不允许相同作用域内重复声明  会报错  （函数参数，和 函数第一个{} 其实就是同一个作用域，因此参数和第一个{}的变量要注意）
+
+    块级作用域
+        let实际上为JS新增了块级作用域
+           es6 允许块级作用域的任意嵌套。
+               外层作用域无法读取内层的变量
+               内层可以定义外层作用域同名的变量
+    const  声明一个只读常量。一旦声明，常量的值就不能改变
+           与let 命令相同，只在声明所在的块级作用域内有效
+           同样不提升，同样存在暂时性死区，同样只能在声明的位置后面使用
+
+           const实际上保证的，并不是变量的值不得改动，而是变量指向的那个内存地址不得改动。
+           对于简单类型的数据（数值、字符串、布尔值），值就保存在变量指向的那个内存地址，
+           因此等同于常量。但对于复合类型的数据（主要是对象和数组），变量指向的内存地址，
+           保存的只是一个指针，const只能保证这个指针是固定的，至于它指向的数据结构是不是可变的，
+           就完全不能控制了。因此，将一个对象声明为常量必须非常小心。
+              

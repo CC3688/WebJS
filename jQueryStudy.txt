@@ -5,7 +5,7 @@
         $('#div1').css('background','red');   选择 id 元素
         $('.div1').css('background','red');   选择 class类 元素
         $('div').css('background','red');     选择 标签 元素
-                如果想同修个多样式可以用{'key1':'val1','key2':'val2'} 样式是key 值是val 都包引号
+                如果想同时修改多个 样式可以用{'key1':'val1','key2':'val2'} 样式是key 值是val 都包引号
         可以省略 原生的循环操作
         $==jQuery    有冲突的时候使用
 
@@ -229,12 +229,12 @@
 
             多次添加on 的处事方法
             $('#div1).click(function(){
-                $('#span1').off('click).click(function(){
+                $('#span1').off('click').click(function(){
 
                 })
             })
             这种嵌套是不合理的。当div1被点多次是，就等于有了多个span1 ，一点span1,就会被触发多次
-            因为它们都是事件绑定的形式。
+            因为它们都是事件绑定的形式。http://www.cnblogs.com/alex3714/articles/5230609.html
             应该把span1,放在div1外面。这样写了，怎样补救，可以用off() 。先把之前的事件清除掉，再绑上事件。
 
         jQ事件委托
@@ -265,7 +265,7 @@
                         if(ev.which==13){
                             $('#input1').trigger('click');    //这里主动的去触发#input已经绑定好的click事件
                             另一种写法  $(#input1').click();   两种写法没有什么区别。在原码中，这种写法最后也是调用前一种来实现
-                                                              前者空能更多 
+                                                              前者功2能更多 
                         }
                     })
 
@@ -424,27 +424,294 @@
      
         $.ajax()的两个简写 （*****）
           
-            $.get(url后台地址,{data传入后台的数据，key:val}，function(){},dataType'json/xml').error(){失败走这里};
+            $.get(
+                url后台地址,
+                {data传入后台的数据，key:val}，
+                function(){},
+                dataType'json/xml'
+                ).error(){失败走这里};
+                
                     注意各个参数，.error() 可以不写的。
+            
             $.post()  参数和上面一样。
 
             以上两个没有async  想用async 需要用$.ajax
 
-14
+5jQuery插件 组件
+    jQ插件      先引入jQuery 再引入插件
+                有功能形   也有效果形
+    
+    UI组件   组件 更强大，功能多
+           jQuery UI
+                交互，部件，特效，工具
+           jQuery Easy UI
+                更强有的后台交互控件
+
+6jQuery
+    jQuery高级方法 （平时比较少用，稍微复杂一点点）*
+        清空内容
+            html("")
+            empty()
+        删除节点
+            remove()   可以删除，删除后的结果 就是刚才删除的元素 可以添加到其他地方 只保留节点的元素，不保留操作行为
+            detach()   可以删除，删除后的结果 就是刚才删除的元素 可以添加到其他地方 保留节点元素，保留元素之前的操作行为
+        获取文本
+            text()    获取元素内的文本，要是里面有嵌套元素，文本都抽取合并出来，而元素不理。
+                      如果是获取文本的是元素集合，就把集合的所有元素的文本都抽取合并不出
+                      也可以传参设置文本，但不解析元素标签，会当成文本输出。
+        替换节点
+            replaceWidth()    元素1.replaceWidth(元素2)   结果元素1,变成了元素2，元素1消失（元素1 被 元素2来代替）
+            replaceAll()      元素1.replaceAll(元素2)     结果元素2，变成元素1，元素2消化 （元素1 把 元素2替代掉）
+
+        
+        事件的扩展 
+            hover()  ***    
+                调用的是 mouseleave  和 mouseenter
+                (以上两个 和over out 区别  这两个 如果有 嵌套元素 冒泡 会产生运动 队列 )
+                接收两个函数做参数
+        
+        focusin()
+        focusout()
+            与focus  blur区别   获取光标 和失去光标， 不支持冒泡 所以 如div 内有input 
+            input的这两个事件是无法冒泡 到div上的
 
 
+        one()  类似于on  但只触发一次  
 
 
+        元素.on('事件'，'筛选条件',{jasion  格式的数据}，function(ev){
+            这里可以通过 key 获取 数据
+            或通过event ev   ev.data.key
+            如果有筛选条件，this 指向 筛选条件 元素
+        });
+
+        对比一下委托的写法
+        元素.delegate('筛选条件'，'事件'，function(){
+            his 指向 筛选条件 元素
+
+        });
+
+    原生的 event对象
+        手持设置  
+        ev.originalEvent.changedTouches
+        先获取原生的event事件，再获touch事件
+
+    自定事件
+       $(元素).on('zoomIn',funtion(){...});  自定义事件zoomIN
+
+       $(元素).on('zoomOut',funtion(){...}); 自定义事件zoomOut
+
+       $(元素).trigger('zoomIn')     主动解发 zoomIn自定义事件    通过trigger来触发自定义事件
+                                    代码运行到这里就触发了
+            还是要调系统事件来触发自定义事件
+       $(元素).on('DOMMouseScroll',function(){
+           这时就需要先转为原生的event    ev.originalEvent.detail 向下 -3  向上 +3
+           if(ev.originalEvent.detail>0){
+               $(this).trigger('zoomIn')
+           }else{
+               $(this).trigger('zoomOut')
+           }
+
+           ev.originalEvent.detail
+       });
+                    原全可以在这里进行缩小放有操作 ，不需要进行自定义事件
+      自定事件，其实，更适合多个协作
+       
+        triggerHandler()   主动触发事件， 但不触发事件自带的默认行为       
+            与 trigger     可以触发事件的 默认行为
 
 
+        ev.stopPropagation()
+            与 ev.stopImmediatePropagation()  会阻止本身的事件操作
 
+        ready事件
+            $(function(){
 
+            });
+            $(document).ready(function(){
 
+            });
+            以上两个等价.   等DOM加载完就会执行
 
+            $(window).load(function(){
 
+            });等整个页面加载完才会执行
 
+        JQ截至操作  *
+          nextUntil()
+          prevUntil()
+          parentsUntil()
+                传入的参数，作为查到的截至位置，不包括截至位置
 
+        数据缓存  ***   设置缓存数据
+        元素.data()   接收两个 参数  data('key':'value)   可以通过   元素.data('key') 得到value
+                     把数据存到了一个有的集合中js库中，并没有直接存在元素身上，虽然表面看像存在元素身上。
+                     缓存数据用data
+           prop()  以下这两个也可以这样  与attr相同//内部是通过 . []  去获取和 设置的
 
+          attr()   attr向元素身上添加自带的属性或自定义  用attr   //内部是通过setAttribute() getAttribute
 
+        还有对应的删除方法 removeAttr()    removeProp()    removeData()
 
+        JSON形式的设置
+            on()     元素.on({click:function(){...},mouseover:function(){...}})
+            css()    元
+            attr()
 
+        回调形式的设置
+          addClass()    addClass(function(i,oldClassName){ i是index  oldClassName是原来的className   })
+          html()
+          val()
+
+jQuer工具方法  
+    $.merge()     *   可以合并两个数组，只能合并合个 var a=[1,2]  var b=[3,4]
+                       var c=$.merge(a,b) --->[1,2,3,4]
+    $.map()       *   对数组进行重新的操作 var arr=['a','b','c']  
+                      arr2=$.map(arr,function(a,b){a是值，b是index
+                      return 重新操作之后的结果数组  
+                      })
+    $.grep()      *   对数组进行重新的操作 var arr=[1,5,6]  
+                      arr2=$.map(arr,function(a,b){a是值，b是index
+                      return a>4;  把结果返回真的元素留下，假的去掉
+                      })
+    $.unique()    *   去重，只是针对DOM节点的去重方法，对非DOM节点数组不起作用  （我们平进用得少，在原码里用得多）
+
+    $.inArray()   *   针对数组，var arr=['a','b','c'];  类似于indexOf()
+                      $.inArray('b',arr)-->结果是1    查找指定的元素在数组中的位置
+    $.makeArray() *   转数组的  原来的通过target name 获取的类数组，可以用$.makeArray(类数组)
+                      转为数组，就可以用数组的方法
+    $.trim()      ***    去空格
+
+ajax扩展
+    $.param()    传入一json 会把传入的json数据拼接到url后面的格式   一般ajax 会自动转  ***
+
+    .serialize()       $(form).serialize()   
+                        可以把表单的数据做成可以拼接到url后面的结果，只能收集name和value的形式
+
+    .serializeArray()  $(form).serialize()
+                        可以把表单的数据做成做成  数组，数组的元素是json，json以{name:name值，val:val值}，
+                        只能收集name和value的形式
+    
+    快捷方法
+       load()       元素.load('地址  [筛选条件]'，[回调函数])    可以把地址的内容直接添加到 
+                    元素里面
+
+    $.getScript    $.getScript('data.js')     可以动态的加载文件，可以应用于按需加载，
+                    可以做性能优化，不需要不加载，需要才加载
+    
+    $.getJSON()    $.getJSON('地址',function(data){  data的json数据  })   
+                    可以请求到服务器端的JSON数据
+
+    jsonp    $.getJSON('url.php?callback=?',function(data){ data数据  })  
+                ？ jq会自动创建一个函数名，并自动 解析 后台返回的json数据 ,建议不要改？为自定义名字
+
+            而用 $.ajax({  url：'url.php?callback=自定义名'})  可以自定名。
+            如果 datatyp 设为jsonp  则url 后不用callback
+
+    默认配置
+       $.ajaxSetup()     接收一个json   全局设置配置信息
+
+       全局事件
+         加到document上，参数的意义
+         $.ajaxStart()
+         $.ajaxStop()
+         $.ajaxSuccess()
+         $.ajaxError()
+         $.ajaxComplete()
+         $.ajaxSend()
+jQuery防止冲突及队列  *
+      防止库之间的冲突
+        $.noConflict()
+            在$被占用之前 ，调用J=$.noConflict(); 之后，J就可以像$那样用了，而$就释放为一个普通的字符
+        $.each()   遍历
+            $(div).each(function(){...});
+            var arr=['a','b','c']; var obj={}
+            $.each(arr,function(i,val){i是下标0，1，2，val是对应的值})
+            工具方法，原生的也可以用。支持数组，也支持对象
+        $.end()  后退链式操作
+            $(div).next().css('background','red').end().css('fontColor','red');
+            $.end(),可以结束链式操作，返回起始位置 ，可以继续对$(div)进行操作,只是反回上一层
+
+        $.addBack()
+            $(div).next().css('background','red').addBack().css('fontColor','red');
+            addBack,既操作next()的原素，又操作$(div)，反回上一层，且有包含当前元素
+        $.add()
+            $(div).add(span).css('background','red')
+            等于把span 也添加到集合当中，也被改背景了
+
+        * JQ中的队列    $.queue()      队列，存储的都是函数
+                    $.dequeue()     当进行出队操作的时候，会自动执行相应的函数
+                    默认队列名 fx
+        $.queue(document,'cc',fn1);    第一个参数，队列存储元素的元素。第二个，是队列名字，第三个是存储进队列的
+        $.queue(document,'cc',fn2);
+        $.queue(document,'cc',fn3);
+
+        $.dequeue(document,'cc');  fn1 出队  ，就是触发发上面存入的函数，执行函数
+        $.dequeue(document,'cc');  fn2
+        $.dequeue(document,'cc');  fn3
+
+        $(document).queue('cc',fn1);
+        $(document).queue('cc',fn1);
+
+        $(document).dequeue('cc',fn1);
+        $(document).dequeue('cc',fn1);
+
+        $(div).animate({width:200});    会先后执行，先变化width-->height-->left;
+        $(div).animate({height:200});    其实就是队列，先入队，后出来。animate是自动queue和dequeue
+        $(div).animate({left:200});      使用默认队列名 fx
+
+        $(div).animate({width:200});    会执行width 然后执行 fn1  就不执行了。
+        $(div).animate('fx',fn1);       animate 会自动 queue和dequeue，但执行到fx,它不会自动去dequeue。
+        $(div).animate({height:200});   后面就不会执行了。需要在fn1 里dequeue 一下 
+        $(div).animate({left:200});
+    JQ中的回调函数 *
+        $.Callbacks();
+            add
+            remove
+            fire
+            var cb=$.Callbacks();
+            cb.add(a);
+            cb.add(b)
+            cb.fire(); ab           首先把 函数a 添加到 cb 集合，cb.fire()就是触发这个集合。a就执行了。
+            cb.add(c)              有add多少个就触发多少个。  按先后顺序执行。如果在cb.fire后面，就不执行。
+            cb.fire()   abc          每次cb,fire  触发，都会把在它前面的触发。
+            cb.remove(b);
+            cb.fire();ac
+
+                    Callbacks(四个可选参数)
+                        once 如果 加了这个，就只触发一次
+                        memory  
+                        unique 去掉重复的操作
+                        stopOnFalse  只要函数内有return false 就不再执行下面的代码了
+
+    JQ中的延迟对象  ***  操作异步的  是基于Callbacks 开发的
+
+        $.Deferred()    只针对异步的
+        var dfd=$.Deferred();
+        setTimeout(function(){
+            alert(1);
+            dfd.resolve(); ----->解决    --对应 done   （解决的状态就会保持住，解决了，后面的done就能触发）
+        },1000);
+        dfd.done(function(){  ---->done -->成功
+            alert(2);
+        });                //弹1，弹2  （Callbacks，也能做到）
+
+                            reject()----->未解决   对应 fail 失败
+        正常的写法：
+        $.ajax({
+            url:"xxx.php",
+            success:function(){},
+            error:function(){}
+        })
+        $.ajax("xxx.php").done(function(){...}).fail(function(){...});
+
+        以上两个写法，完全是一回事。
+
+        $.ajax('xxx.php').done(function(){});
+        $.ajax('yyy.php').done(function(){});  这两个是分别进行的。
+
+        $.when($.ajax('xxx.php'),$.ajax('yyy.php')).done(function(){});
+                                等两个ajax都请求成功才触发
+
+    JQ源码架构
+        21   31：45
