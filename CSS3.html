@@ -113,9 +113,23 @@
             ltr 从左向右排列
             注意要配合unicode-bidi   一块使用
         
-        text-overflow   定义省略文本的处理方式。
+        text-overflow   定义省略文本的处理方式。 （全兼容）
             clip    无省略号
             ellipsis 省略号 （注意配合，overflow:hidden和white-space:nowrap 一块使用）
+        
+        自定义字体：
+               引入自定义字体的格式：
+                @font-face
+                {
+                font-family: myFirstFont;
+                src: url('Sansation_Light.ttf'),
+                    url('Sansation_Light.eot'); /* IE9+ */
+                font-weight:normal;
+                font-style:normal;
+                }
+                使用的时候，就可以按之前普通字体那样使用。通过font-family设置。
+
+
              
 
 -->
