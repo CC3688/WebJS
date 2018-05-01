@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<!-- 
+    css3,的兼容属性写法,有时声明一条样式要这样写:
+    -webkit-属性:value;   兼容旧webkit内核的浏览器,如chrome,safari
+        -moz-属性:value;   兼容旧firefox火狐浏览器
+            -o-属性:value;   兼容旧opera浏览器
+            属性:value;   正常高级浏览器
+    -webkit-transition:value;
+        -moz-transition:value;
+            -o-transition:value;
+            transition:value;
+    
+    在js里,由于不支持"-"的写法,所以,要去掉"-",然后字母大写
+    WebkitTransition:value;
+        MozTransition:value;
+            OTransition:value;
+            transition:value;
+
+选择器:
+    属性选择器:       选择器与属性之间没有空格
+    选择器[属性]            =>会在选择器的结果下,筛选有[属性](中声明属性)的元素。  
+    选择器[属性=value]      =>会在选择器的结果下,筛选有[属性=value](中声明属性)的元素。  
+    选择器[属性~=value]     =>会在选择器的结果下,筛选有[属性~=value](中声明属性)的元素。
+                             ~=后的value,只要存在 属性值列表 中就可以匹配。 
+                             = 要求属性值一一对应。有多个值，要对应上就要全部写，加引号。
+    选择器[属性^=value]     =>属性的值，要以value开关（且是属性值列表的第一个值）才能匹配上。
+    选择器[属性$=value]     =>匹配结尾。
+                             匹配开头或者结尾。如果属性是一个列表，就看第一个或最后一个的开头
+                             或结尾的属性的值的开头或结尾能不能匹配。如果只有一个值，就看此值
+                             的开头或结尾。 注意列表前后不要有空格。
+    
+    选择器[属性*=value]     =>只要属性列表中的值，包含了指定的value就可以匹配到。
+    选择器[属性|=value]     =>属性列表的第一个值的开头，是"value-"。或属性只有一个值，且值为“value”
+                             就可以匹配到。
+
+    小结：其实原理很像正则，进行匹配。能匹配到就可以。
+
+    结构选择器：结构性伪类
+        选择器:nth-child(n)   =>表示，选择器所选元素的 父级元素中的，第n个子元
+                                素，从1开始计数。选择器，一般会是一个元素选择
+                                器，那么，后面要匹配的元素需要与选择器匹配才能
+                                选中,不匹配的元素，也加入算数排序。如果，不理
+                                元素，只想取父级下的第几个元素，可以用* 任意元素选择器。
+        E:nth-child(odd)   奇数行
+        E:nth-child(even)  偶数行
+        E:nth-child(2n)    n是自然数。
+        E:first-child == E:nth-child(1)
+        E:last-child == E:nth-last-child(1)
+        E:nth-last-child(n)    从后面开向前计算。
+          
+        选择器:nth-of-type(n)  =>父元素下的子元素下的第n个元素。子元素要匹配
+                                选择器的才加入排序计算。不同父级，分组计。
+        E:nth-last-of-type(n)  从后面开始计算。
+        E:first-of-type  ==E:nth-of-type(1)
+        E:last-of-type  ==E:nth-last-of-type(1)
+
+        E:empty      表示E元素中没有子节点。（子节点包含文本节点）
+        E:only-child 表示E元素中只有一个子节点 （子节点不包含文本节点）
+        E:only-of-type 表示E元素中的只有一个子节点，且为E类型。（子节点不包含文本节点）
+
+        小结：E:nth-child 与 E:nth-of-type
+         得到的集合不同
+         E:nth-child 只要是E父元素下的子元素，就计算入内排序。无论子元素是不是E类型
+         E:nth-of-type 是E父元素下的子元素且子元素类型是E，才计算入内排序。
+
+         筛选结果：
+         E:nth-child 子元素类型是E,且排序对得上n才能选中。（如果要忽略类型，用*代替E。
+         E:nth-of-type  n为几就选中几。
+        
+         两者的排序，都是按不同父元素(有多个父元素的情况)，分组进行的。
+    选择器：伪类
+        锚点相关：
+        E:target  表示当前的url片段的哈希值，=>E:哈希值，这个元素必须是E
+        表单相关
+        E:disabled 表示不可点击的表单控件
+        E:enabled  表示可以点击的表单控件
+        E:checked  表示已选中的checkbox或radio
+                    与E~F配合，可以做出样式漂亮的表单
+        文本相关
+        E:first-line 表示E元素中的第一行
+        E:first-letter 表示E元素中的第一个字符
+        E::selection   表示E元素在用户选中文字时
+        E::before {content:"value"}   生成内容在E元素里最前， 使用“:”,也行。
+        E::after {content:"value"}   生成内容在E元素里最后，  使用“:”,也行。
+        
+        E:not(s)    排除选项       
+        E~F 表示E元素后面相邻的F元素。
+
+    文本新增属性：
+        rgba（r,g,b,a)
+            r   read    红 0-255
+            g   green   绿 0-255
+            b   blue    蓝 0-255
+            a   Alpha   透明 0-1    （越小越透明）
+        
+        文字阴影：
+            text-shadow:x y 模糊成度 颜色;
+                text-shadow:0,0,10px,red; 
+                    x,y 也是px值表示x,y轴的偏移量。正负值表示的方向不同。
+            阴影叠加：text-shadow 可以多次设置。中间用逗号隔开。
+                 text-shadow:-5px -10px 1px red,5px -10px 1px red;
+
+        direction 定义文字排列方式（全兼容）
+            rtl 从右向左排列
+            ltr 从左向右排列
+            注意要配合unicode-bidi   一块使用
+        
+        text-overflow   定义省略文本的处理方式。
+            clip    无省略号
+            ellipsis 省略号 （注意配合，overflow:hidden和white-space:nowrap 一块使用）
+             
+
+-->
+</body>
+</html>
